@@ -37,3 +37,5 @@ $ ->
 	person = new Person
 	personView = new PersonView model: person
 
+	newperson = new Person
+

@@ -66,11 +66,12 @@
   })(Backbone.View);
 
   $(function() {
-    var person, personView;
+    var newperson, person, personView;
     person = new Person;
-    return personView = new PersonView({
+    personView = new PersonView({
       model: person
     });
+    return newperson = new Person;
   });
 
 }).call(this);
