@@ -1,4 +1,4 @@
-
+# MODEL
 class Person extends Backbone.Model
 	defaults: 
 		name: "Guest User"
@@ -18,21 +18,22 @@ class Person extends Backbone.Model
 class PersonView extends Backbone.View	
 	tagName: 'li'	 # defaults to div if not specified
 	className: 'person'  # optional, can also set multiple like 'person european'
-	id: 'people' # optional
 
 	events: 
 		'click':					'alertTest'
-		'click .edit':		'editPerson'
-		'click .delete':	'deletePerson'
 	
-	initialize: ->
+	initialize: (options) ->
 		@render()		# render is an optional function that defines the logic for rendering a template
 
 	render: -> 
-		# @$el.text 
-		console.log "my name is " + @get('name')
+		@$el
+			.html @model.get('name') + ' is ' + @model.get('age') + ' years old and works as ' + @model.get('occupation') 
+			.appendTo $('#container')
+
+	alertTest: ->
+		alert 'klikles!'
 
 $ ->
 	person = new Person
-	person.work()
-	personView = new PersonView
+	personView = new PersonView model: person
+

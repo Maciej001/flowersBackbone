@@ -45,20 +45,20 @@
 
     PersonView.prototype.className = 'person';
 
-    PersonView.prototype.id = 'people';
-
     PersonView.prototype.events = {
-      'click': 'alertTest',
-      'click .edit': 'editPerson',
-      'click .delete': 'deletePerson'
+      'click': 'alertTest'
     };
 
-    PersonView.prototype.initialize = function() {
+    PersonView.prototype.initialize = function(options) {
       return this.render();
     };
 
     PersonView.prototype.render = function() {
-      return console.log("my name is " + this.get('name'));
+      return this.$el.html(this.model.get('name') + ' is ' + this.model.get('age') + ' years old and works as ' + this.model.get('occupation')).appendTo($('#container'));
+    };
+
+    PersonView.prototype.alertTest = function() {
+      return alert('klikles!');
     };
 
     return PersonView;
@@ -68,8 +68,9 @@
   $(function() {
     var person, personView;
     person = new Person;
-    person.work();
-    return personView = new PersonView;
+    return personView = new PersonView({
+      model: person
+    });
   });
 
 }).call(this);
