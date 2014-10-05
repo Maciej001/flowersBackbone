@@ -3,29 +3,28 @@
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  $(function() {
-    window.app = window.app || {};
-    return app.Todo = (function(_super) {
-      __extends(Todo, _super);
+  window.app = window.app || {};
 
-      function Todo() {
-        return Todo.__super__.constructor.apply(this, arguments);
-      }
+  app.Todo = (function(_super) {
+    __extends(Todo, _super);
 
-      Todo.prototype.defaults = {
-        title: 'Maciej',
-        completed: false
-      };
+    function Todo() {
+      return Todo.__super__.constructor.apply(this, arguments);
+    }
 
-      Todo.prototype.toggle = function() {
-        return this.save({
-          completed: !this.get('completed')
-        });
-      };
+    Todo.prototype.defaults = {
+      title: 'Maciej',
+      completed: false
+    };
 
-      return Todo;
+    Todo.prototype.toggle = function() {
+      return this.save({
+        completed: !this.get('completed')
+      });
+    };
 
-    })(Backbone.Model);
-  });
+    return Todo;
+
+  })(Backbone.Model);
 
 }).call(this);

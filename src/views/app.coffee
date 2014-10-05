@@ -1,110 +1,108 @@
 # views/app.coffee
-$ ->
-	window.app = window.app || {}
 
-	# The Application
+window.app = window.app || {}
 
-	class app.AppView extends Backbone.View
+# The Application
 
-		# bind to existing element
-		el: '#todoapp'
+class app.AppView extends Backbone.View
 
-		# statistics template at the bottom
-		statsTemplate: _.template( $('#stats-template').html() )
+	# bind to existing element
+	el: '#todoapp'
 
-		events: 
-			'keypress #new-todo': 			'createOnEnter'
-			'click #clear-completed':		'clearCompleted'
-			'click #toggle-all':				'toggleAllComplete'
+	# statistics template at the bottom
+	statsTemplate: _.template( $('#stats-template').html() )
 
-		initialize: ->
-			#first element
-			@allCheckbox = 	@.$('#toggle-all')[0]
-			@$input = 			@.$('#new-todo')
-			@$footer = 			@.$('#footer')
-			@$main = 				@.$('#main')
+	events: 
+		'keypress #new-todo': 			'createOnEnter'
+		'click #clear-completed':		'clearCompleted'
+		'click #toggle-all':				'toggleAllComplete'
 
-			@.listenTo app.Todos, 'add', @addOne
-			@.listenTo app.Todos, 'reset', @addAll
+	initialize: ->
+		#first element
+		@allCheckbox = 	@.$('#toggle-all')[0]
+		@$input = 			@.$('#new-todo')
+		@$footer = 			@.$('#footer')
+		@$main = 				@.$('#main')
 
-			@.listenTo app.Todos, 'change:completed', @filterOne
-			@.listenTo app.Todos, 'filter', @filterAll
-			@.listenTo app.Todos, 'all', @render
+		@.listenTo app.Todos, 'add', @addOne
+		@.listenTo app.Todos, 'reset', @addAll
+		@.listenTo app.Todos, 'change:completed', @filterOne
+		@.listenTo app.Todos, 'filter', @filterAll
 
-			app.Todos.fetch();
+		# any event will render()
+		@.listenTo app.Todos, 'all', @render
 
-		# re-rendering means refreshing the statistics
-		# the rest of app doesn't change
-		render: ->
-			completed = app.Todos.completed().length
-			remaining = app.Todos.remaining().length
+		app.Todos.fetch();
 
-			if app.Todos.length
-				@$main.show()
-				@$footer.show()
+	# re-rendering means refreshing the statistics
+	# the rest of app doesn't change
+	render: ->
+		completed = app.Todos.completed().length
+		remaining = app.Todos.remaining().length
 
-				@$footer.html @statsTemplate
-					completed: completed  # number of completed tasks
-					remaining: remaining  # number of remianing tasks
+		if app.Todos.length
+			@$main.show()
+			@$footer.show()
 
-				@.$('#filters li a')
-					.removeClass('selected')
-					.filter '[href="#/' + (app.TodoFilter || '') + '"]'
-					.addClass('selected')
-			else
-				@$main.hide()
-				@$footer.hide()
+			@$footer.html @statsTemplate
+				completed: completed  # number of completed tasks
+				remaining: remaining  # number of remianing tasks
 
-			@allCheckbox.checked = !remaining
+			@.$('#filters li a')
+				.removeClass('selected')
+				.filter '[href="#/' + (app.TodoFilter || '') + '"]'
+				.addClass('selected')
+		else
+			@$main.hide()
+			@$footer.hide()
 
-		# add todo item by creating a view for it, and
-		# append its element to the 'ul'
-		addOne: (todo) ->
-			view = new app.TodoView
-				model: todo
-			$('#todo-list').append view.render().el
+		@allCheckbox.checked = !remaining
 
-		# add all items in the **Todos** collection at once
-		addAll: ->
-			@.$('#todo-list').html('')
-			app.Todos.each( @addOne, @)
+	# add todo item by creating a view for it, and
+	# append its element to the 'ul'
+	addOne: (todo) ->
+		view = new app.TodoView
+			model: todo
+		$('#todo-list').append view.render().el
 
-		filterOne: (todo) ->
-			todo.trigger('visible')
+	# add all items in the **Todos** collection at once
+	addAll: ->
+		@.$('#todo-list').html('')
+		app.Todos.each( @addOne, @)
 
-		filterAll: ->
-			app.Todos.each(@filterOne, @)
+	filterOne: (todo) ->
+		todo.trigger('visible')
 
-		# generate the attributes for a new Todo item
-		newAttributes: ->
-			title: @$input.val().trim()
-			order: app.Todos.nextOrder()
-			completed: false
+	filterAll: ->
+		app.Todos.each(@filterOne, @)
 
-		# if you hit Enter in main input field, create new Todo model,
-		# persisting it to localStorage
-		createOnEnter: (e) ->
-			return if e.which isnt ENTER_KEY or not @$input.val().trim()
+	# generate the attributes for a new Todo item
+	newAttributes: ->
+		title: @$input.val().trim()
+		order: app.Todos.nextOrder()
+		completed: false
 
-			# create creates a new instance of a model within a collection
-			app.Todos.create @newAttributes()
+	# if you hit Enter in main input field, create new Todo model,
+	# persisting it to localStorage
+	createOnEnter: (e) ->
+		return if e.which isnt ENTER_KEY or not @$input.val().trim()
 
-			# clear/reset input field
-			@$input.val ''
+		# create creates a new instance of a model within a collection
+		app.Todos.create @newAttributes()
 
-		clearCompleted: ->
-			_.invoke app.Todos.completed(), 'destroy'
-			false
+		# clear/reset input field
+		@$input.val ''
 
-		toggleAllComplete: ->
-			completed = @allCheckbox.checked
+	clearCompleted: ->
+		_.invoke app.Todos.completed(), 'destroy'
+		false
 
-			app.Todos.each (todo) ->
-				todo.save
-					'completed': completed
+	toggleAllComplete: ->
+		completed = @allCheckbox.checked
 
-
-
+		app.Todos.each (todo) ->
+			todo.save
+				'completed': completed
 
 
 
@@ -130,4 +128,7 @@ $ ->
 
 
 
-			
+
+
+
+		
