@@ -1,16 +1,17 @@
-# js/models/todo.coffee
+# /models/todo.coffee
+$ ->
+	window.app = window.app || {}
+	# Todo Model
+	# has 'title' and 'completed' attributes
 
-app = app || {}
+	class app.Todo extends Backbone.Model
+		defaults: 
+			title: 			'Maciej'
+			completed: 	false
 
-# Todo Model
-# has 'title' and 'completed' attributes
+		# toggle the 'completed' state of todo item
+		# and save itd
+		toggle: ->
+			@save	
+				completed: !@get('completed')  
 
-app.Todo =  Backbone.Model.extend
-	defaults: 
-		title: 			''
-		completed: 	false
-
-	# toggle the 'completed' state of todo item
-	toggle: ->
-		@save	
-			completed: !@get('completed')  
